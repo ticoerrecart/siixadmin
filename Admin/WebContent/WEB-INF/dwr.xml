@@ -1,0 +1,33 @@
+<!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN"
+    "http://getahead.org/dwr/dwr30.dtd">
+
+<dwr>
+	<allow>		
+
+		<convert converter="exception" match="ar.com.admin.negocio.exception.NegocioException">
+			<param name="include" value="message" />
+		</convert>
+		
+		<convert converter="exception" match="java.lang.Exception" >
+		    <param name="include" value="message,lineNumber"/>
+		</convert>
+		
+		<create creator="none" javascript="Validator">
+		    <param name="class" value="ar.com.admin.struts.utils.Validator"/>
+		</create>
+
+		<create creator="spring" javascript="UtilFachada">
+			<param name="beanName" value="utilFachada" />
+		</create>
+	
+		<create creator="spring" javascript="UtilSIIFFachada">
+			<param name="beanName" value="utilSIIFFachada" />
+		</create>
+		
+		<create creator="spring" javascript="UtilSIIMFachada">
+			<param name="beanName" value="utilSIIMFachada" />
+		</create>
+	</allow>
+
+</dwr> 

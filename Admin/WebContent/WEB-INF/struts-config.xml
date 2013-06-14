@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+
+	<form-beans>
+		<form-bean name="loginForm" type="ar.com.admin.struts.actions.forms.LoginForm">
+		</form-bean>
+		<form-bean name="usuarioForm"
+			type="ar.com.admin.struts.actions.forms.UsuarioForm">
+		</form-bean>
+		<form-bean name="reporteForm" type="ar.com.admin.struts.actions.forms.ReporteForm">			
+		</form-bean>
+	</form-beans>
+
+	<global-exceptions></global-exceptions>
+
+	<global-forwards>
+		<forward name="error" path=".error"></forward>
+		<forward name="errorSinMenu" path=".errorSinMenu"></forward>
+		<forward name="bloqueError" path="/jsp/error.jsp"></forward>
+	</global-forwards>
+
+	<action-mappings>
+
+		<action path="/jsp" type="ar.com.admin.struts.actions.TilesForwardAction">
+			<forward name=".index" path=".index" />
+			<forward name=".login" path=".login" />
+			<forward name=".recuperarUsuarios" path=".recuperarUsuarios" />
+			<forward name=".script" path=".script" />
+		</action>
+
+		<action path="/menu" type="ar.com.admin.struts.actions.MenuAction"
+			parameter="metodo" />
+
+		<action path="/login" type="ar.com.admin.struts.actions.LoginAction"
+			parameter="metodo" name="loginForm" scope="request">
+			<forward name="exitoLogin" path=".index" />
+			<forward name="errorLogin" path="/jsp/login.jsp" />
+			<forward name="exitoLogout" path="/jsp/login.jsp" />
+		</action>
+
+		<!-- REPORTES  -->			
+		<action path="/reporte" type="ar.com.admin.struts.actions.ReportesAction"
+			parameter="metodo">
+			<forward name="exitoMostrarReporte" path=".mostrarReporte" />
+
+			<forward name="exitoMostrarReportes" path=".mostrarReportes" />			
+		</action>
+		
+		<action path="/actualizarReporte" type="ar.com.admin.struts.actions.ReportesAction"
+			parameter="metodo" name="reporteForm">
+			<forward name="exitoMostrarReportes" path="/jsp/exitoUploadReporte.jsp" />			
+		</action>
+		<!-- FIN REPORTES  -->
+
+		<!-- SELECCIONAR BASE -->
+		<action path="/seleccionarBase" type="ar.com.admin.struts.actions.SeleccionarBaseAction">
+			<forward name="exitoSeleccionarBase" path=".seleccionarBase" />			
+		</action>
+		<!-- FIN SELECCIONAR BASE -->
+		
+		
+		<!-- LOGS -->
+		<action path="/log" type="ar.com.admin.struts.actions.LogAction"
+			parameter="metodo">
+			<forward name="logSuccess" path=".logs"/>
+		</action>
+		<!-- FIN LOGS -->		
+
+	</action-mappings>
+
+	<message-resources parameter="ar.com.admin.struts.resources.application" />
+
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+		<set-property property="moduleAware" value="true" />
+	</plug-in>
+
+</struts-config>
