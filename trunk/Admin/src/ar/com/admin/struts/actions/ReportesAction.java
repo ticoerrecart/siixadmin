@@ -30,6 +30,28 @@ public class ReportesAction extends ValidadorAction {
 		return mapping.findForward(forward);
 	}
 
+	private String getClaseReporte(String sistema) {
+		String strClase = MyLogger.getResourceBundle().getString(
+				sistema + ".claseReporte");
+		return strClase;
+	}
+
+	private boolean verificarClaseReporte(String sistema)
+			throws ClassNotFoundException {
+		String strClase = getClaseReporte(sistema);
+		Class clase = Class.forName(strClase);
+		Class[] interfaces = clase.getInterfaces();
+		boolean ok = false;
+		for (Class interfaz : interfaces) {
+			if ("ar.com.admin.interfaces.IReporte".equals(interfaz.getName())) {
+				ok = true;
+				break;
+			}
+		}
+
+		return ok;
+	}
+
 	public ActionForward obtenerReportes(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -37,14 +59,18 @@ public class ReportesAction extends ValidadorAction {
 		String forward = "exitoMostrarReportes";
 		try {
 			String sistema = request.getParameter("sistema");
-
-			WebApplicationContext ctx = getWebApplicationContext();
-
-			IReportesFachada reportesFachada = (IReportesFachada) ctx
-					.getBean("reportes" + sistema + "Fachada");
-			List<IReporte> reportes = reportesFachada.obtenerReportes();
-			request.setAttribute("reportes", reportes);
-			request.setAttribute("sistema", sistema);
+			if (!verificarClaseReporte(sistema)) {
+				forward = "error";
+				request.setAttribute("error",
+						"La clase Reporte de éste Sistema no implementa la Interfaz 'IReporte'");
+			} else {
+				WebApplicationContext ctx = getWebApplicationContext();
+				IReportesFachada reportesFachada = (IReportesFachada) ctx
+						.getBean("reportes" + sistema + "Fachada");
+				List<IReporte> reportes = reportesFachada.obtenerReportes();
+				request.setAttribute("reportes", reportes);
+				request.setAttribute("sistema", sistema);
+			}
 		} catch (NoSuchBeanDefinitionException nsbe) {
 			forward = "error";
 			request.setAttribute("error", "No hay reportes para éste sistema.");
@@ -76,8 +102,7 @@ public class ReportesAction extends ValidadorAction {
 								+ "Fachada");
 
 				InputStream is = reporteForm.getFile().getInputStream();
-				String strClase = MyLogger.getResourceBundle().getString(
-						reporteForm.getSistema() + ".claseReporte");
+				String strClase = getClaseReporte(reporteForm.getSistema());
 				if (strClase == null || "".equals(strClase)) {
 					forward = "error";
 					request.setAttribute(
