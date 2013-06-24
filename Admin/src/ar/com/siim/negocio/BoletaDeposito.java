@@ -14,7 +14,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import ar.com.siim.utils.Fecha;
+import ar.com.admin.utils.Fecha;
 
 @Entity
 public class BoletaDeposito {
