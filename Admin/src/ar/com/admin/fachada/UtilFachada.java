@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -57,7 +58,9 @@ public class UtilFachada implements IUtilFachada {
 					+ PropertyUtils.getProperty(o, field.getName()) + "', ");
 		}
 
-
 	}
 
+	public Set<String> getAllMappedClasses() {
+		return utilDAO.getAllMappedClasses();
+	}
 }
