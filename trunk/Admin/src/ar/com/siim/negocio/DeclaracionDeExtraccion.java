@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+import ar.com.siif.enums.TipoOperacion;
+
 @Entity
 public class DeclaracionDeExtraccion {
 
@@ -48,7 +50,15 @@ public class DeclaracionDeExtraccion {
 
 	@OneToMany(mappedBy = "declaracionDeExtraccion")
 	@Cascade(value = CascadeType.SAVE_UPDATE)
-	private List<VolumenDeclaracionDeExtraccion> volumenes = new ArrayList<VolumenDeclaracionDeExtraccion>();
+	private List<BoletaDeposito> boletas = new ArrayList<BoletaDeposito>();
+
+	@OneToMany(mappedBy = "declaracionDeExtraccion")
+	@Cascade(value = CascadeType.SAVE_UPDATE)
+	private List<TrimestreDeclaracionDeExtraccion> trimestres = new ArrayList<TrimestreDeclaracionDeExtraccion>();
+
+	@OneToMany(mappedBy = "declaracion")
+	@Cascade(value = CascadeType.SAVE_UPDATE)
+	private List<OperacionDeclaracionExtraccion> operaciones;
 
 	public Long getId() {
 		return id;
@@ -83,6 +93,16 @@ public class DeclaracionDeExtraccion {
 	}
 
 	public double getImporteTotal() {
+		return importeTotal;
+	}
+
+	public double getImporteTotalCalculado() {
+		Double importeTotal = 0.0;
+		for (TrimestreDeclaracionDeExtraccion trimestre : this.getTrimestres()) {
+			importeTotal = importeTotal + trimestre.getVolumenTotal()
+					* trimestre.getRegaliaMinera();
+		}
+
 		return importeTotal;
 	}
 
@@ -122,12 +142,85 @@ public class DeclaracionDeExtraccion {
 		this.localidad = localidad;
 	}
 
-	public List<VolumenDeclaracionDeExtraccion> getVolumenes() {
-		return volumenes;
+	public List<OperacionDeclaracionExtraccion> getOperaciones() {
+		return operaciones;
 	}
 
-	public void addVolumenDeclaracionDeExtraccion(
-			VolumenDeclaracionDeExtraccion volumen) {
-		this.volumenes.add(volumen);
+	public void setOperaciones(List<OperacionDeclaracionExtraccion> operaciones) {
+		this.operaciones = operaciones;
+	}
+
+	public OperacionDeclaracionExtraccion getOperacionAlta() {
+		for (OperacionDeclaracionExtraccion operacion : this.getOperaciones()) {
+			if (operacion.getTipoOperacion().equals(
+					TipoOperacion.ALTA.getDescripcion())) {
+				return operacion;
+			}
+		}
+		return null;
+	}
+
+	public List<OperacionDeclaracionExtraccion> getOperacionesModificacion() {
+		List<OperacionDeclaracionExtraccion> operacionesModificacion = new ArrayList<OperacionDeclaracionExtraccion>();
+		for (OperacionDeclaracionExtraccion operacion : this.getOperaciones()) {
+			if (operacion.getTipoOperacion().equals(
+					TipoOperacion.MOD.getDescripcion())) {
+				operacionesModificacion.add(operacion);
+			}
+		}
+		return operacionesModificacion;
+	}
+
+	public void addOperacion(
+			OperacionDeclaracionExtraccion operacionActaVerificacion) {
+		if (this.operaciones == null) {
+			this.operaciones = new ArrayList<OperacionDeclaracionExtraccion>();
+		}
+		this.operaciones.add(operacionActaVerificacion);
+	}
+
+	public List<BoletaDeposito> getBoletas() {
+		return boletas;
+	}
+
+	public void addBoleta(BoletaDeposito boleta) {
+		if (this.getBoletas() == null) {
+			boletas = new ArrayList<BoletaDeposito>();
+		}
+
+		boletas.add(boleta);
+	}
+
+	public List<TrimestreDeclaracionDeExtraccion> getTrimestres() {
+		return trimestres;
+	}
+
+	public void addTrimestre(TrimestreDeclaracionDeExtraccion trimestre) {
+		if (this.getTrimestres() == null) {
+			trimestres = new ArrayList<TrimestreDeclaracionDeExtraccion>();
+		}
+		trimestres.add(trimestre);
+	}
+
+	public TrimestreDeclaracionDeExtraccion getTrimestre(Long nroTrimestre) {
+		List<TrimestreDeclaracionDeExtraccion> trimestres = this
+				.getTrimestres();
+		for (TrimestreDeclaracionDeExtraccion trimestre : trimestres) {
+
+			if (nroTrimestre.intValue() == trimestre.getNroTrimestre()
+					.intValue()) {
+				return trimestre;
+			}
+		}
+		return null;
+	}
+
+	public double getVolumenTotal() {
+		double volTotal = 0.0;
+		for (TrimestreDeclaracionDeExtraccion trimestre : this.getTrimestres()) {
+
+			volTotal = volTotal + trimestre.getVolumenTotal();
+		}
+		return volTotal;
 	}
 }

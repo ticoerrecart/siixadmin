@@ -2,6 +2,7 @@ package ar.com.siim.negocio;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,6 +30,8 @@ public class TrimestreDeclaracionDeExtraccion {
 
 	private Date fechaVencimiento;
 
+	private Double regaliaMinera;
+
 	@ManyToOne()
 	@Cascade(value = { CascadeType.ALL, CascadeType.DELETE_ORPHAN })
 	@JoinColumn(name = "tipoProducto_fk")
@@ -36,8 +39,11 @@ public class TrimestreDeclaracionDeExtraccion {
 
 	@ManyToOne()
 	@Cascade(value = { CascadeType.ALL, CascadeType.DELETE_ORPHAN })
-	@JoinColumn(name = "volumenDeclaracionDeExtraccion_fk")
-	private VolumenDeclaracionDeExtraccion volumenDeclaracionDeExtraccion;
+	@JoinColumn(name = "declaracionDeExtraccion_fk")
+	private DeclaracionDeExtraccion declaracionDeExtraccion;
+
+	@Column(nullable = false)
+	private Date fecha;
 
 	public Long getId() {
 		return id;
@@ -95,13 +101,37 @@ public class TrimestreDeclaracionDeExtraccion {
 		this.tipoProducto = tipoProducto;
 	}
 
-	public VolumenDeclaracionDeExtraccion getVolumenDeclaracionDeExtraccion() {
-		return volumenDeclaracionDeExtraccion;
+	public Double getVolumenTotal() {
+		return this.getVolumenPrimerMes() + this.getVolumenSegundoMes()
+				+ this.getVolumenTercerMes();
 	}
 
-	public void setVolumenDeclaracionDeExtraccion(
-			VolumenDeclaracionDeExtraccion volumenDeclaracionDeExtraccion) {
-		this.volumenDeclaracionDeExtraccion = volumenDeclaracionDeExtraccion;
+	public Double getImporteTotal() {
+		return this.getVolumenTotal() * this.getRegaliaMinera();
 	}
 
+	public DeclaracionDeExtraccion getDeclaracionDeExtraccion() {
+		return declaracionDeExtraccion;
+	}
+
+	public void setDeclaracionDeExtraccion(
+			DeclaracionDeExtraccion declaracionDeExtraccion) {
+		this.declaracionDeExtraccion = declaracionDeExtraccion;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	public Double getRegaliaMinera() {
+		return regaliaMinera;
+	}
+
+	public void setRegaliaMinera(Double regaliaMinera) {
+		this.regaliaMinera = regaliaMinera;
+	}
 }

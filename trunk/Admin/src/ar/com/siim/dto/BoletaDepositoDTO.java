@@ -20,6 +20,8 @@ public class BoletaDepositoDTO {
 
 	private DeclaracionExtraccionDTO declaracionExtraccion;
 
+	private boolean anulado;
+
 	public BoletaDepositoDTO() {
 
 		declaracionExtraccion = new DeclaracionExtraccionDTO();
@@ -98,4 +100,16 @@ public class BoletaDepositoDTO {
 		this.declaracionExtraccion = declaracionExtraccion;
 	}
 
+	public boolean getAnulado() {
+		return anulado;
+	}
+
+	public void setAnulado(boolean anulado) {
+		this.anulado = anulado;
+	}
+
+	public boolean esNula() {
+		return area == null && concepto == null && efectivoCheque == null
+				&& fechaVencimiento == null && monto == 0.0 && numero == null;
+	}
 }

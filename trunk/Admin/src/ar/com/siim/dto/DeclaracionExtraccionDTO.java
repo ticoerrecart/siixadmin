@@ -3,37 +3,39 @@ package ar.com.siim.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.com.siim.dto.BoletaDepositoDTO;
-import ar.com.siim.dto.EntidadDTO;
-import ar.com.siim.dto.LocalidadDTO;
+import ar.com.siif.enums.TipoOperacion;
 
 public class DeclaracionExtraccionDTO {
 
-	private Long id;
+	private Long id;//
 
-	private long numero;
+	private Long numero;//
 
-	private EntidadDTO productor;
+	private EntidadDTO productor;//
 
-	private String periodo;
+	private String periodo;//
 
-	private String fechaVencimiento;
+	private double importeTotal;//
 
-	private double importeTotal;
+	private LocalidadDTO localidad;//
 
-	private LocalidadDTO localidad;
+	private LocalizacionDTO localizacion;//
 
 	private String fecha;
-	
-	private List<BoletaDepositoDTO> boletasDeposito;
-	
-	private boolean anulado;
-	
-	public DeclaracionExtraccionDTO(){
-		
+
+	private List<VolumenDeclaracionDeExtraccionDTO> volumenes;//
+
+	private boolean anulado;//
+
+	private List<OperacionDeclaracionExtraccionDTO> operaciones;
+
+	public DeclaracionExtraccionDTO() {
+
 		productor = new EntidadDTO();
 		localidad = new LocalidadDTO();
-		boletasDeposito = new ArrayList<BoletaDepositoDTO>();
+		localizacion = new LocalizacionDTO();
+		volumenes = new ArrayList<VolumenDeclaracionDeExtraccionDTO>();
+		operaciones = new ArrayList<OperacionDeclaracionExtraccionDTO>();
 	}
 
 	public Long getId() {
@@ -44,11 +46,11 @@ public class DeclaracionExtraccionDTO {
 		this.id = id;
 	}
 
-	public long getNumero() {
+	public Long getNumero() {
 		return numero;
 	}
 
-	public void setNumero(long numero) {
+	public void setNumero(Long numero) {
 		this.numero = numero;
 	}
 
@@ -66,14 +68,6 @@ public class DeclaracionExtraccionDTO {
 
 	public void setPeriodo(String periodo) {
 		this.periodo = periodo;
-	}
-
-	public String getFechaVencimiento() {
-		return fechaVencimiento;
-	}
-
-	public void setFechaVencimiento(String fechaVencimiento) {
-		this.fechaVencimiento = fechaVencimiento;
 	}
 
 	public double getImporteTotal() {
@@ -100,19 +94,51 @@ public class DeclaracionExtraccionDTO {
 		this.fecha = fecha;
 	}
 
-	public List<BoletaDepositoDTO> getBoletasDeposito() {
-		return boletasDeposito;
-	}
-
-	public void setBoletasDeposito(List<BoletaDepositoDTO> boletasDeposito) {
-		this.boletasDeposito = boletasDeposito;
-	}
-
-	public boolean isAnulado() {
+	public boolean getAnulado() {
 		return anulado;
 	}
 
 	public void setAnulado(boolean anulado) {
 		this.anulado = anulado;
+	}
+
+	public List<VolumenDeclaracionDeExtraccionDTO> getVolumenes() {
+		return volumenes;
+	}
+
+	public void setVolumenes(List<VolumenDeclaracionDeExtraccionDTO> volumenes) {
+		this.volumenes = volumenes;
+	}
+
+	public LocalizacionDTO getLocalizacion() {
+		return localizacion;
+	}
+
+	public void setLocalizacion(LocalizacionDTO localizacion) {
+		this.localizacion = localizacion;
+	}
+
+	public OperacionDeclaracionExtraccionDTO getOperacionAlta() {
+		for (OperacionDeclaracionExtraccionDTO operacion : this
+				.getOperaciones()) {
+			if (operacion.getTipoOperacion().equals(
+					TipoOperacion.ALTA.getDescripcion())) {
+				return operacion;
+			}
+		}
+		return null;
+	}
+
+	public void addOperacion(OperacionDeclaracionExtraccionDTO operacion) {
+		this.getOperaciones().add(operacion);
+	}
+
+	public List<OperacionDeclaracionExtraccionDTO> getOperaciones() {
+		return operaciones;
+	}
+
+	public void setOperaciones(
+			List<OperacionDeclaracionExtraccionDTO> operaciones) {
+		this.operaciones = operaciones;
 	}
 }
