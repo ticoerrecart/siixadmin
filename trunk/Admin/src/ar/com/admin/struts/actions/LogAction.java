@@ -38,6 +38,19 @@ public class LogAction extends DispatchAction {
 		return bos.toByteArray();
 	}
 
+	private boolean esUnFileProhibido(String fileName) {
+		String filesProhibidos = MyLogger.getResourceBundle().getString(
+				"files.prohibidos");
+
+		for (String fileProhibido : filesProhibidos.split(",")) {
+			if (fileName.indexOf(fileProhibido) > 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	@SuppressWarnings("unchecked")
 	public ActionForward verLog(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -47,31 +60,37 @@ public class LogAction extends DispatchAction {
 
 			ServletOutputStream out = response.getOutputStream();
 			String fileName = request.getParameter("file");// "/usr/local/tomcat-7.0.6/logs/catalina.out";
-			if (fileName == null || "".equals(fileName)) {
-				out.write("Ningún archivo seleccionado para ver.".getBytes());
+			if (esUnFileProhibido(fileName)) {
+				out.write("Prohibido el acceso para ver éste archivo."
+						.getBytes());
 			} else {
-				File file = new File(fileName);
-				if (!file.exists()) {
-					String s = "El archivo '" + fileName + "' no existe.";
-					out.write(s.getBytes());
+				if (fileName == null || "".equals(fileName)) {
+					out.write("Ningún archivo seleccionado para ver."
+							.getBytes());
 				} else {
-					if (file.isDirectory()) {
-						String s = "El archivo '" + fileName
-								+ "' es un directorio.";
+					File file = new File(fileName);
+					if (!file.exists()) {
+						String s = "El archivo '" + fileName + "' no existe.";
 						out.write(s.getBytes());
 					} else {
-						if (file.length() == 0) {
+						if (file.isDirectory()) {
 							String s = "El archivo '" + fileName
-									+ "' tiene 0 bytes.";
+									+ "' es un directorio.";
 							out.write(s.getBytes());
 						} else {
-							byte[] bytes = getByteArrayFromFile(file);
+							if (file.length() == 0) {
+								String s = "El archivo '" + fileName
+										+ "' tiene 0 bytes.";
+								out.write(s.getBytes());
+							} else {
+								byte[] bytes = getByteArrayFromFile(file);
 
-							// Lo muestro en la salida del response
-							response.setContentType("text/plain");
-							// response.setContentLength(baos.size());
-							out.write(bytes, 0, bytes.length);
+								// Lo muestro en la salida del response
+								response.setContentType("text/plain");
+								// response.setContentLength(baos.size());
+								out.write(bytes, 0, bytes.length);
 
+							}
 						}
 					}
 				}
