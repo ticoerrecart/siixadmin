@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import ar.com.siif.enums.TipoOperacion;
+import ar.com.siim.enums.TipoOperacion;
 
 @Entity
 public class DeclaracionDeExtraccion {
@@ -215,10 +215,10 @@ public class DeclaracionDeExtraccion {
 		return null;
 	}
 
-	public double getVolumenTotal() {
+	public double getVolumenTotal(){
 		double volTotal = 0.0;
 		for (TrimestreDeclaracionDeExtraccion trimestre : this.getTrimestres()) {
-
+			
 			volTotal = volTotal + trimestre.getVolumenTotal();
 		}
 		return volTotal;
