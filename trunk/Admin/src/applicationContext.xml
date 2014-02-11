@@ -34,6 +34,15 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 		<property name="password" value="jUTRDpsv42mnu" />
 	</bean>
 
+	<!-- siig -->
+	<bean id="dataSourceSIIG"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/x071vm20_siig" />
+		<property name="username" value="x071vm20" />
+		<property name="password" value="jUTRDpsv42mnu" />
+	</bean>
+
 	<!-- Hibernate SessionFactory -->
 		<!-- admin -->
 	<bean id="sessionFactory"
@@ -76,6 +85,23 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	<bean id="hibernateTemplateSIIM" class="org.springframework.orm.hibernate3.HibernateTemplate">
 		<property name="sessionFactory" ref="sessionFactorySIIM" />
 	</bean>
+
+		<!-- siig -->
+	<bean id="sessionFactorySIIG"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSourceSIIG" />
+		</property>
+		<property name="configLocation" value="classpath:hibernateSIIG.cfg.xml" />
+		<property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration" />
+	</bean>
+
+	<bean id="hibernateTemplateSIIG" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactorySIIG" />
+	</bean>
+
+
+
 	
 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative 
 		to JTA) -->
@@ -102,7 +128,13 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 		</property>
 	</bean>
 
-
+	<!-- siig -->
+	<bean id="transactionManagerSIIG"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactorySIIG" />
+		</property>
+	</bean>
 	<!--  *******************-->
 	<!--     Respositories   -->
 	<!--  *******************-->
@@ -115,6 +147,9 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	</bean>
 	<bean id="abstractRepositorySIIM" abstract="true">
 		<property name="hibernateTemplate" ref="hibernateTemplateSIIM" />
+	</bean>
+	<bean id="abstractRepositorySIIG" abstract="true">
+		<property name="hibernateTemplate" ref="hibernateTemplateSIIG" />
 	</bean>
 
 	<bean id="menuDAO" class="ar.com.admin.dao.MenuDAO" parent="abstractRepository" />
@@ -130,6 +165,9 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 		<!-- siim -->
 	<bean id="reportesSIIMDAO" class="ar.com.admin.dao.ReportesDAO" parent="abstractRepositorySIIM" />
 	<bean id="utilSIIMDAO" class="ar.com.admin.dao.UtilDAO" parent="abstractRepositorySIIM" />
+		<!-- siig -->
+	<bean id="reportesSIIGDAO" class="ar.com.admin.dao.ReportesDAO" parent="abstractRepositorySIIG" />
+	<bean id="utilSIIGDAO" class="ar.com.admin.dao.UtilDAO" parent="abstractRepositorySIIG" />
 	
 	<!--  *******************-->
 	<!--     Fachadas   -->
@@ -271,6 +309,29 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 		</property>
 	</bean>
 
+	<!-- siig -->
+	<bean id="reportesSIIGFachadaImpl" class="ar.com.admin.fachada.ReportesFachada">
+		<constructor-arg ref="reportesSIIGDAO" />
+	</bean>	
+
+	<bean id="reportesSIIGFachada"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManagerSIIG" />
+		</property>
+		<property name="proxyTargetClass" value="true" />
+		<property name="target">
+			<ref bean="reportesSIIGFachadaImpl" />
+		</property>
+		<property name="proxyInterfaces" value="ar.com.admin.fachada.IReportesFachada" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED,-java.lang.Exception</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
 	<!-- UTIL -->
 		<!-- admin --> 
 	<bean id="utilFachadaImpl" class="ar.com.admin.fachada.UtilFachada">
@@ -338,7 +399,27 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 		</property>
 	</bean>
 
+	<!-- siig -->
+	<bean id="utilSIIGFachadaImpl" class="ar.com.admin.fachada.UtilFachada">
+		<constructor-arg ref="utilSIIGDAO" />
+	</bean>	
 
+	<bean id="utilSIIGFachada"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManagerSIIG" />
+		</property>
+		<property name="proxyTargetClass" value="true" />
+		<property name="target">
+			<ref bean="utilSIIGFachadaImpl" />
+		</property>
+		<property name="proxyInterfaces" value="ar.com.admin.fachada.IUtilFachada" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED,-java.lang.Exception</prop>
+			</props>
+		</property>
+	</bean>
 	<!--  *******************-->
 	<!--       Parameters    -->
 	<!--  *******************-->
@@ -346,13 +427,6 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	<bean id="version" class="java.lang.String">
 		<constructor-arg value="1.0" />
 	</bean>
-
-
-	<!-- <bean id="log4jInitialization" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"> 
-		<property name="targetClass" value="org.springframework.util.Log4jConfigurer" 
-		/> <property name="targetMethod" value="initLogging" /> <property name="arguments"> 
-		<list> <value>${webapp.root}/WEB-INF/log4j.properties</value> </list> </property> 
-		</bean> -->
 
 
 </beans>

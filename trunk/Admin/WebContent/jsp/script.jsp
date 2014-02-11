@@ -16,7 +16,10 @@
 
 <script type="text/javascript"
 	src="<html:rewrite page='/dwr/interface/UtilSIIMFachada.js'/>"></script>
-	
+
+<script type="text/javascript"
+	src="<html:rewrite page='/dwr/interface/UtilSIIGFachada.js'/>"></script>
+		
 <script type="text/javascript"
 	src="<html:rewrite page='/js/validacionAjax.js'/>"></script>
 <script type="text/javascript"
@@ -43,12 +46,7 @@
 			}else{
 				eval("Util" + $("#sistema").val() + "Fachada.execute('" + $("#script").val() + "',ejecutarScriptCallback );");
 			}
-			/*if($("#sistema").val()=="SIIF"){
-				UtilSIIFFachada.execute($("#script").val(),ejecutarScriptCallback );
-			}
-			if($("#sistema").val()=="SIIM"){
-				UtilSIIMFachada.execute($("#script").val(),ejecutarScriptCallback );
-			}*/
+
 		}else{
 			alert("Escriba el script a ejecutar.");
 			$("#script").focus();

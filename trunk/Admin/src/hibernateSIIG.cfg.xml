@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- vim: set ts=2 et sw=2 : -->
+<!DOCTYPE hibernate-configuration
+  PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+  "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<!-- SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+		<!-- Disable the second-level cache -->
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<!-- Echo all executed SQL to stdout -->
+		<property name="hibernate.show_sql">false</property>
+		<property name="hibernate.format_sql">true</property>
+
+		<!-- Drop and re-create the database schema on startup -->
+		<property name="hbm2ddl.auto">update</property>
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<mapping class='ar.com.siig.negocio.Rol' />
+		<mapping class='ar.com.siig.negocio.ItemMenu' />
+		<mapping class='ar.com.siig.negocio.Usuario' />
+		<mapping class='ar.com.siig.negocio.Localidad' />
+		<mapping class='ar.com.siig.negocio.Provincia' />
+		<mapping class='ar.com.siig.negocio.Establecimiento' />		
+		<mapping class='ar.com.siig.negocio.Periodo' />
+		<mapping class='ar.com.siig.negocio.Entidad' />
+		<mapping class='ar.com.siig.negocio.RecursosNaturales' />
+		<mapping class='ar.com.siig.negocio.Productor' />
+		<mapping class='ar.com.siig.negocio.TipoProducto' />
+		<mapping class='ar.com.siig.negocio.Reporte' />
+		<mapping class='ar.com.siig.negocio.VencimientoPeriodo' />
+		<mapping class='ar.com.siig.negocio.CanonMarcaSenial' />
+		<mapping class='ar.com.siig.negocio.MarcaSenial' />
+		<mapping class='ar.com.siig.negocio.Marca' />
+		<mapping class='ar.com.siig.negocio.Senial' />
+		<mapping class='ar.com.siig.negocio.BoletaDeposito' />
+		<mapping class='ar.com.siig.negocio.Autorizacion' />
+		<mapping class='ar.com.siig.negocio.Autorizado' />
+		<mapping class='ar.com.siig.negocio.TipoAutorizacion' />
+		<mapping class='ar.com.siig.negocio.Denuncia' />
+		<mapping class='ar.com.siig.negocio.DenunciaHacienda' />
+		<mapping class='ar.com.siig.negocio.DenunciaPerros' />
+		<mapping class='ar.com.siig.negocio.TipoDeDenuncia' />
+		<mapping class='ar.com.siig.negocio.Guia' />		
+		<mapping class='ar.com.siig.negocio.Categoria' />
+		<mapping class='ar.com.siig.negocio.TipoAnimal' />
+		<mapping class='ar.com.siig.negocio.AnimalEnEstablecimiento' />
+		<mapping class='ar.com.siig.negocio.ProductorEnEstablecimiento' />		
+	</session-factory>
+</hibernate-configuration>
+

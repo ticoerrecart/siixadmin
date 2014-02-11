@@ -28,6 +28,10 @@
 		<create creator="spring" javascript="UtilSIIMFachada">
 			<param name="beanName" value="utilSIIMFachada" />
 		</create>
+		
+		<create creator="spring" javascript="UtilSIIGFachada">
+			<param name="beanName" value="utilSIIGFachada" />
+		</create>
 	</allow>
 
 </dwr> 
