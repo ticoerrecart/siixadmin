@@ -3,3 +3,5 @@
 3-crear un hibernatexxx.cfg.xml nuevo con lo mismo que tiene el proyecto a agregar
 4-configurar el applicationContext.xml con el dataSource nuevo y todo
 5-agregar lo necesario en config.properties
+6-agregar la fachada en script.jsp para poder hacer el llamado DWR
+7-definir la fachada en dwr.xml
