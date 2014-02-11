@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import ar.com.siif.enums.TipoOperacion;
+import ar.com.siim.enums.TipoOperacion;
 
 @Entity
 public class ActaDeVerificacion {
@@ -45,6 +45,7 @@ public class ActaDeVerificacion {
 	@JoinColumn(name = "yacimiento_fk")
 	private Localizacion yacimiento;
 
+	
 	private String areaDeVerificacion;
 
 	@Column(nullable = false)
@@ -73,15 +74,15 @@ public class ActaDeVerificacion {
 
 	private String domicilioDestinatario;
 
-	private int granelVolumenM3Declarado;
+	private double granelVolumenM3Declarado;
 
-	private int granelVolumenM3Medido;
+	private double granelVolumenM3Medido;
 
 	private String granelObservaciones;
 
 	private int bolsaCantidad;
 
-	private int bolsaVolumenD3;
+	private double bolsaVolumenD3;
 
 	private String bolsaTitularMembrete;
 
@@ -89,13 +90,14 @@ public class ActaDeVerificacion {
 
 	@OneToMany(mappedBy = "actaVerificacion")
 	@Cascade(value = CascadeType.SAVE_UPDATE)
-	private List<OperacionActaVerificacion> operaciones;
-
+	private List<OperacionActaVerificacion> operaciones;	
+	
 	public ActaDeVerificacion() {
 		transporte = new Transporte();
 		destino = new LocalidadDestino();
 	}
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -127,7 +129,7 @@ public class ActaDeVerificacion {
 	public void setFechaVerificacion(Date fechaVerificacion) {
 		this.fechaVerificacion = fechaVerificacion;
 	}
-
+	
 	public Date getFecha() {
 		return fecha;
 	}
@@ -232,7 +234,7 @@ public class ActaDeVerificacion {
 		this.domicilioDestinatario = domicilioDestinatario;
 	}
 
-	public int getGranelVolumenM3Declarado() {
+	public double getGranelVolumenM3Declarado() {
 		return granelVolumenM3Declarado;
 	}
 
@@ -240,7 +242,7 @@ public class ActaDeVerificacion {
 		this.granelVolumenM3Declarado = granelVolumenM3Declarado;
 	}
 
-	public int getGranelVolumenM3Medido() {
+	public double getGranelVolumenM3Medido() {
 		return granelVolumenM3Medido;
 	}
 
@@ -264,18 +266,18 @@ public class ActaDeVerificacion {
 		this.bolsaCantidad = bolsaCantidad;
 	}
 
-	public int getBolsaVolumenD3() {
+	public double getBolsaVolumenD3() {
 		return bolsaVolumenD3;
 	}
 
-	public int getBolsaVolumenTotal() {
+	public double getBolsaVolumenTotal() {
 		return bolsaVolumenD3 * bolsaCantidad / 1000;
 	}
 
-	public int getVolumenTotal() {
+	public double getVolumenTotal() {
 		return getBolsaVolumenTotal() + getGranelVolumenM3Declarado();
 	}
-
+	
 	public void setBolsaVolumenD3(int bolsaVolumenD3) {
 		this.bolsaVolumenD3 = bolsaVolumenD3;
 	}
@@ -306,8 +308,7 @@ public class ActaDeVerificacion {
 
 	public OperacionActaVerificacion getOperacionAlta() {
 		for (OperacionActaVerificacion operacion : this.getOperaciones()) {
-			if (operacion.getTipoOperacion().equals(
-					TipoOperacion.ALTA.getDescripcion())) {
+			if (operacion.getTipoOperacion().equals(TipoOperacion.ALTA.getDescripcion())){
 				return operacion;
 			}
 		}
@@ -317,8 +318,7 @@ public class ActaDeVerificacion {
 	public List<OperacionActaVerificacion> getOperacionesModificacion() {
 		List<OperacionActaVerificacion> operacionesModificacion = new ArrayList<OperacionActaVerificacion>();
 		for (OperacionActaVerificacion operacion : this.getOperaciones()) {
-			if (operacion.getTipoOperacion().equals(
-					TipoOperacion.MOD.getDescripcion())) {
+			if (operacion.getTipoOperacion().equals(TipoOperacion.MOD.getDescripcion())){
 				operacionesModificacion.add(operacion);
 			}
 		}
@@ -330,5 +330,5 @@ public class ActaDeVerificacion {
 			this.operaciones = new ArrayList<OperacionActaVerificacion>();
 		}
 		this.operaciones.add(operacionActaVerificacion);
-	}
+	}	
 }
