@@ -1,7 +1,9 @@
 package ar.com.admin.fachada;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +23,8 @@ public class UtilFachada implements IUtilFachada {
 		this.utilDAO = utilDAO;
 	}
 
-	public String execute(String sql) {
+	public String execute(String sql) throws UnsupportedEncodingException {
+		sql = URLDecoder.decode(sql, "iso-8859-1");
 		String strSelect = "select";
 		int select = sql.toLowerCase().indexOf(strSelect);
 		int from = sql.toLowerCase().indexOf("from");

@@ -41,10 +41,11 @@
 		if($("#script").val().trim()!=""){
 			$("#divCargando").show();
 			$("#Aceptar").attr("disabled",true);
+			//alert($("#sistema").val() + "|" + $("#script").val())
 			if($("#sistema").val()=="ADMIN"){
 				UtilFachada.execute($("#script").val(),ejecutarScriptCallback );
 			}else{
-				eval("Util" + $("#sistema").val() + "Fachada.execute('" + $("#script").val() + "',ejecutarScriptCallback );");
+				eval("Util" + $("#sistema").val() + "Fachada.execute('" + escape($("#script").val()) + "',ejecutarScriptCallback );");
 			}
 
 		}else{
