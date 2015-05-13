@@ -27,4 +27,9 @@ public class ReportesFachada implements IReportesFachada {
 			throws IOException {
 		reportesDAO.actualizarReporte(idReporte, is, clase);
 	}
+	
+	public Long insertarReporte(InputStream is, IReporte reporte, String nombreReporte, String nombreReportePadre)
+			throws IOException{
+		return reportesDAO.insertarReporte(is, reporte, nombreReporte, nombreReportePadre);
+	}
 }

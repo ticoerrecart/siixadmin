@@ -62,7 +62,7 @@ public class ReportesAction extends ValidadorAction {
 			if (!verificarClaseReporte(sistema)) {
 				forward = "error";
 				request.setAttribute("error",
-						"La clase Reporte de éste Sistema no implementa la Interfaz 'IReporte'");
+						"La clase Reporte de ï¿½ste Sistema no implementa la Interfaz 'IReporte'");
 			} else {
 				WebApplicationContext ctx = getWebApplicationContext();
 				IReportesFachada reportesFachada = (IReportesFachada) ctx
@@ -73,7 +73,7 @@ public class ReportesAction extends ValidadorAction {
 			}
 		} catch (NoSuchBeanDefinitionException nsbe) {
 			forward = "error";
-			request.setAttribute("error", "No hay reportes para éste sistema.");
+			request.setAttribute("error", "No hay reportes para ï¿½ste sistema.");
 		} catch (Exception e) {
 			forward = "error";
 			request.setAttribute("error", e.getMessage());
@@ -95,7 +95,7 @@ public class ReportesAction extends ValidadorAction {
 		} else {
 			if (!reporteForm.getFile().getFileName().endsWith(".jasper")) {
 				request.setAttribute("detalle",
-						"El reporte que está intentando subir no tiene una extensión válida.");
+						"El reporte que estï¿½ intentando subir no tiene una extensiï¿½n vï¿½lida.");
 			} else {
 				IReportesFachada reportesFachada = (IReportesFachada) ctx
 						.getBean("reportes" + reporteForm.getSistema()
@@ -107,7 +107,7 @@ public class ReportesAction extends ValidadorAction {
 					forward = "error";
 					request.setAttribute(
 							"error",
-							"No se ha definido en la configuración la clase 'Reporte' para el sistema seleccionado.");
+							"No se ha definido en la configuraciï¿½n la clase 'Reporte' para el sistema seleccionado.");
 				} else {
 					Class clase = Class.forName(strClase);
 					reportesFachada.actualizarReporte(
@@ -121,4 +121,53 @@ public class ReportesAction extends ValidadorAction {
 		return mapping.findForward(forward);
 	}
 
+	public ActionForward insertarReporte(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		String forward = "exitoMostrarReportes";
+		WebApplicationContext ctx = getWebApplicationContext();
+
+		ReporteForm reporteForm = (ReporteForm) form;
+		if (reporteForm.getFile().getFileSize() == 0) {
+			request.setAttribute("detalle", "Seleccione un reporte.");
+		} else {
+			if (!reporteForm.getFile().getFileName().endsWith(".jasper")) {
+				request.setAttribute("detalle",
+						"El reporte que estÃ¡ intentando subir no tiene una extensiÃ³n vÃ¡lida.");
+			} else {
+
+				if (reporteForm.getNombreReporte() == null
+						|| "".equalsIgnoreCase(reporteForm.getNombreReporte())) {
+					request.setAttribute("detalle",
+							"El reporte que estÃ¡ intentando subir no tiene un nombre de Reporte vÃ¡lido.");
+				} else {
+					IReportesFachada reportesFachada = (IReportesFachada) ctx
+							.getBean("reportes" + reporteForm.getSistema()
+									+ "Fachada");
+
+					InputStream is = reporteForm.getFile().getInputStream();
+					String strClase = getClaseReporte(reporteForm.getSistema());
+					if (strClase == null || "".equals(strClase)) {
+						forward = "error";
+						request.setAttribute(
+								"error",
+								"No se ha definido en la configuraciÃ³n la clase 'Reporte' para el sistema seleccionado.");
+					} else {
+						Class clase = Class.forName(strClase);
+						IReporte reporte = (IReporte) clase.getConstructor()
+								.newInstance();
+						Long idReporteNuevo = reportesFachada.insertarReporte(
+								is, reporte, reporteForm.getNombreReporte(),
+								reporteForm.getNombreReportePadre());
+						request.setAttribute("detalle", "El reporte con id: "
+								+ idReporteNuevo
+								+ " fue dado de alta con Exito");
+					}
+				}
+
+			}
+		}
+		return mapping.findForward(forward);
+	}
 }
