@@ -12,4 +12,8 @@ public interface IReportesFachada {
 
 	public void actualizarReporte(Long idReporte, InputStream is, Class clase)
 			throws IOException;
+
+	public Long insertarReporte(InputStream is, IReporte reporte,
+			String nombreReporte, String nombreReportePadre)
+			throws IOException;
 }

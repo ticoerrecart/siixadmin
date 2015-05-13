@@ -64,6 +64,27 @@
 	    </td>
 	  </tr>
 	  
+	  <c:if test="${status.last}">
+
+    	<form method="post" id="form${status.count+1}" enctype="multipart/form-data" action="../../actualizarReporte.do" target="upload_target">
+		  <tr>
+		  	<td width="5%">${status.count+1}</td>
+		    <td width="5%">&nbsp;</td>
+		    <td width="25%">Nombre:<input type="text" name="nombreReporte" size="40" maxlength="81"></td>
+		    <td width="25%">Nombre Padre:<input type="text" name="nombreReportePadre" size="40" maxlength="81"></td>
+		    <td width="45%">
+					<input type="hidden" name="metodo" value="insertarReporte">
+					<input type="hidden" name="sistema" value="${sistema}">
+	
+					<input name="file" type="file" class="botonerab" id="file${status.count+1}">
+					<input type="button" name="action" class="botonerab" value="Insertar reporte" onclick="submitir('${status.count+1}')">
+	
+				
+		    </td>
+		  </tr>
+		</form>
+
+	  </c:if>
 	 </c:forEach>
 </table>
 

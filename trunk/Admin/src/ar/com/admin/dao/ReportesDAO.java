@@ -32,4 +32,16 @@ public class ReportesDAO extends HibernateDaoSupport {
 		this.getHibernateTemplate().saveOrUpdate(reporte);
 	}
 
+	public Long insertarReporte(InputStream is, IReporte reporte,
+			String nombreReporte, String nombreReportePadre) throws IOException {
+
+		Blob fileBlob = Hibernate.createBlob(is);
+		reporte.setIdReporte(null);
+		reporte.setArchivoReporte(fileBlob);
+		reporte.setNombreReporte(nombreReporte);
+		reporte.setNombreReportePadre(nombreReportePadre);
+
+		this.getHibernateTemplate().save(reporte);
+		return reporte.getIdReporte();
+	}
 }

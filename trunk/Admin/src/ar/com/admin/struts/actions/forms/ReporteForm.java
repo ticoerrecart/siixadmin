@@ -13,6 +13,10 @@ public class ReporteForm extends ActionForm implements Serializable {
 
 	private String sistema;
 
+	private String nombreReporte;
+
+	private String nombreReportePadre;
+
 	public FormFile getFile() {
 		return file;
 	}
@@ -35,6 +39,22 @@ public class ReporteForm extends ActionForm implements Serializable {
 
 	public void setSistema(String sistema) {
 		this.sistema = sistema;
+	}
+
+	public String getNombreReporte() {
+		return nombreReporte;
+	}
+
+	public void setNombreReporte(String nombreReporte) {
+		this.nombreReporte = nombreReporte;
+	}
+
+	public String getNombreReportePadre() {
+		return nombreReportePadre;
+	}
+
+	public void setNombreReportePadre(String nombreReportePadre) {
+		this.nombreReportePadre = nombreReportePadre;
 	}
 
 }
